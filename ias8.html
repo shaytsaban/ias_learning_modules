@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAS 8 - מדיניות, אומדנים וטעויות | מודול למידה אינטראקטיבי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1a365d;
+  --primary-light: #2b6cb0;
+  --accent: #d69e2e;
+  --danger: #e53e3e;
+  --success: #38a169;
+  --bg-dark: #0f172a;
+  --bg-light: #f8fafc;
+  --text-dark: #0f172a;
+  --text-light: #f8fafc;
+  --card-bg: #ffffff;
+  --border-color: #cbd5e1;
+  --brilliant-blue: #3b82f6;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Onboarding Screen */
+#onboarding {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #1e293b, #0f172a);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.onboarding-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.onboarding-card h2 {
+  font-family: 'Frank Ruhl Libre', serif;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+.onboarding-card p {
+  margin-bottom: 30px;
+  color: #94a3b8;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--brilliant-blue);
+}
+
+.start-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary-light), var(--brilliant-blue));
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+}
+
+/* Top Navigation & Status Bar */
+.top-bar {
+  background-color: var(--primary);
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.logo {
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 950;
+  font-size: 1.6rem;
+  color: var(--accent);
+}
+
+.stats-container {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-item.lifelines span {
+  color: var(--danger);
+}
+
+.stat-item.hints span {
+  color: var(--accent);
+}
+
+.btn-nav-dropdown {
+  background: var(--bg-light);
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Virtual Assistant */
+.assistant-avatar {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  cursor: grab;
+  z-index: 500;
+  background-image: url('./avatar.png');
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.2s;
+}
+
+.assistant-avatar:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+/* Dialogue Box */
+.dialogue-box {
+  position: fixed;
+  bottom: 130px;
+  left: 30px;
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  z-index: 500;
+  display: none;
+  animation: popIn 0.3s ease-out;
+}
+
+.dialogue-box::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 35px;
+  border-width: 10px 10px 0;
+  border-style: solid;
+  border-color: white transparent;
+  display: block;
+  width: 0;
+}
+
+.dialogue-content {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.dialogue-close {
+  background: var(--primary-light);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  float: left;
+}
+
+@keyframes popIn {
+  from { transform: translateY(20px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Main Layout */
+.container {
+  max-width: 960px;
+  margin: 40px auto 120px;
+  padding: 0 20px;
+}
+
+/* Brilliant-style progression cards */
+.slide {
+  display: none;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.slide.active {
+  display: block;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
+  margin-bottom: 30px;
+}
+
+.card h2 {
+  font-family: 'Frank Ruhl Libre', serif;
+  font-size: 2.2rem;
+  color: var(--primary);
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 10px;
+}
+
+.kicker {
+  color: var(--primary-light);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Flowchart styling */
+.brilliant-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.flow-node {
+  background: var(--bg-light);
+  border: 2px solid var(--primary-light);
+  padding: 16px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.flow-node:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  background-color: #ebf8ff;
+}
+
+.flow-arrow {
+  width: 2px;
+  height: 24px;
+  background-color: var(--primary-light);
+}
+
+/* Forms and Q&A styles */
+.qa-box {
+  background: #f8fafc;
+  border-right: 5px solid var(--primary-light);
+  padding: 24px;
+  border-radius: 8px;
+  margin-top: 24px;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.option-btn {
+  background: white;
+  border: 2px solid var(--border-color);
+  padding: 14px 20px;
+  border-radius: 8px;
+  text-align: right;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option-btn:hover {
+  border-color: var(--primary-light);
+  background: #f0f9ff;
+}
+
+.option-btn.correct {
+  border-color: var(--success);
+  background: #f0fdf4;
+  color: #166534;
+  font-weight: 700;
+}
+
+.option-btn.wrong {
+  border-color: var(--danger);
+  background: #fef2f2;
+  color: #991b1b;
+  font-weight: 700;
+}
+
+.feedback-box {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 8px;
+  display: none;
+  animation: slideDown 0.3s;
+}
+
+.feedback-box.correct {
+  background-color: #f0fdf4;
+  border: 1px solid var(--success);
+  color: #166534;
+  display: block;
+}
+
+.feedback-box.wrong {
+  background-color: #fef2f2;
+  border: 1px solid var(--danger);
+  color: #991b1b;
+  display: block;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Nav Controls */
+.nav-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.nav-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.nav-btn.prev {
+  background: var(--border-color);
+  color: var(--text-dark);
+}
+
+.nav-btn.next {
+  background: var(--brilliant-blue);
+  color: white;
+}
+
+.nav-btn:hover {
+  opacity: 0.9;
+}
+
+/* Quote and standard blocks */
+.standard-quote {
+  background: #f1f5f9;
+  border-right: 4px solid var(--accent);
+  padding: 16px 20px;
+  border-radius: 4px;
+  margin: 18px 0;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+/* Mini-Game Overlay */
+#game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.95);
+  z-index: 2000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+}
+
+#game-container {
+  background: #000;
+  border: 4px solid var(--accent);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+#game-canvas {
+  display: block;
+}
+
+.game-instructions {
+  max-width: 600px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.game-instructions h2 {
+  font-family: 'Frank Ruhl Libre', serif;
+  color: var(--accent);
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+/* Certificate styles */
+#certificate-container {
+  display: none;
+  background: white;
+  padding: 60px;
+  border: 15px double var(--primary);
+  max-width: 800px;
+  margin: 40px auto;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  color: #1e293b;
+}
+
+.cert-title {
+  font-family: 'Frank Ruhl Libre', serif;
+  font-size: 3rem;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.cert-subtitle {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 40px;
+}
+
+.cert-recipient {
+  font-size: 2.2rem;
+  font-weight: 800;
+  border-bottom: 2px solid #e2e8f0;
+  display: inline-block;
+  padding: 0 30px;
+  margin-bottom: 30px;
+}
+
+.cert-text {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 50px;
+  line-height: 1.8;
+}
+
+.cert-signatures {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40px;
+}
+
+.signature-block {
+  text-align: center;
+}
+
+.signature-img {
+  font-family: 'Frank Ruhl Libre', serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  color: #475569;
+  border-bottom: 1px solid #cbd5e1;
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+.print-btn {
+  margin-top: 40px;
+  padding: 12px 24px;
+  background: var(--success);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #certificate-container, #certificate-container * {
+    visibility: visible;
+  }
+  #certificate-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    padding: 20px;
+  }
+  .print-btn, .assistant-avatar, .dialogue-box, .top-bar {
+    display: none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Onboarding screen -->
+<div id="onboarding">
+  <div class="onboarding-card">
+    <h2>אקדמיית צבן</h2>
+    <p>ברוכים הבאים למודול הלמידה של IAS 8 (מדיניות חשבונאית, אומדנים וטעויות). הירשמו כדי להתחיל.</p>
+    <div class="input-group">
+      <label for="student-name">שם מלא:</label>
+      <input type="text" id="student-name" placeholder="ישראל ישראלי" required>
+    </div>
+    <div class="input-group">
+      <label for="student-email">כתובת אימייל:</label>
+      <input type="email" id="student-email" placeholder="example@email.com" required>
+    </div>
+    <button class="start-btn" onclick="startCourse()">כניסה למודול</button>
+  </div>
+</div>
+
+<!-- Game Overlay -->
+<div id="game-overlay">
+  <div class="game-instructions">
+    <h2>אזהרה: אזלו המשאבים!</h2>
+    <p>נשארת ללא חיים או רמזים. עליך לעבור את מיני-משחק "פק-צבן" כדי להמשיך ללמוד!</p>
+    <p>השתמש במקשי החצים כדי לאכול את מטבעות התקינה החשבונאית. הימנע מרוחות הרפאים של ד"ר צבן הזועקות "תלמד חשבונאות יא כלב!"</p>
+  </div>
+  <div id="game-container">
+    <canvas id="game-canvas" width="600" height="400"></canvas>
+  </div>
+</div>
+
+<!-- Virtual Assistant -->
+<div class="assistant-avatar" id="dr-assistant" onmousedown="dragStart(event)"></div>
+<div class="dialogue-box" id="assistant-dialogue">
+  <div class="dialogue-content" id="dialogue-text">שלום! אני כאן לעזור לך להבין את התקנים המסובכים ביותר. לחץ עלי בכל שלב לקבלת עצה!</div>
+  <button class="dialogue-close" onclick="closeDialogue()">סגור</button>
+</div>
+
+<!-- Navigation Top Bar -->
+<div class="top-bar">
+  <div class="logo">IAS 8 Mastery</div>
+  <div class="stats-container">
+    <div class="stat-item lifelines">חיים: <span id="lifelines-display">❤️❤️❤️</span></div>
+    <div class="stat-item hints">רמזים: <span id="hints-display">3</span> <button onclick="useHint()" style="margin-right:8px; cursor:pointer; background:none; border:1px solid white; color:white; border-radius:4px; padding:2px 6px;">השתמש</button></div>
+    <select class="btn-nav-dropdown" id="nav-dropdown" onchange="jumpToSlide(this.value)">
+      <option value="0">מבוא ומפת התמצאות</option>
+      <option value="1">1. מהי מדיניות חשבונאית?</option>
+      <option value="2">2. בחירה ושינוי מדיניות</option>
+      <option value="3">3. אומדנים חשבונאיים</option>
+      <option value="4">4. תיקון טעויות למפרע</option>
+      <option value="5">5. הבחנה מורכבת: מדיניות מול אומדן</option>
+      <option value="6">6. שאלות ברמת מועצת רואי החשבון</option>
+      <option value="7">7. בחינה מסכמת וקבלת תעודה</option>
+    </select>
+    <button onclick="resetCourse()" style="background:var(--danger); color:white; border:none; padding:8px 12px; border-radius:8px; font-weight:700; cursor:pointer;">איפוס</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Slide 0: Intro -->
+  <div class="slide active" id="slide-0">
+    <div class="card">
+      <div class="kicker">מבוא</div>
+      <h2>IAS 8 - בסיס התורה החשבונאית של הזמן</h2>
+      <p>ברוכים הבאים למודול הלמידה האינטראקטיבי של IAS 8. תקן זה עוסק בשלוש שאלות ליבה שכל חשבונאי חייב לשלוט בהן:</p>
+      <ul>
+        <li><strong>מדיניות חשבונאית</strong> - מהם הכללים שבהם בחרנו למדוד ולהציג נתונים?</li>
+        <li><strong>אומדנים חשבונאיים</strong> - כיצד מעדכנים הערכות בעולם של חוסר ודאות?</li>
+        <li><strong>טעויות</strong> - כיצד מתקנים שגיאות שנעשו בתקופות קודמות?</li>
+      </ul>
+      <p>לחיצה על ד"ר צבן בפינה השמאלית תספק לך תובנות מיוחדות לאורך הדרך. בואו נתחיל!</p>
+    </div>
+  </div>
+
+  <!-- Slide 1: Policy Definition -->
+  <div class="slide" id="slide-1">
+    <div class="card">
+      <div class="kicker">חלק 1</div>
+      <h2>מהי מדיניות חשבונאית?</h2>
+      <p><strong>מדיניות חשבונאית</strong> מייצגת את העקרונות, הבסיסים, המוסכמות, הכללים והפרקטיקות הספציפיים המיושמים על ידי ישות בעת הכנה והצגה של דוחותיה הכספיים.</p>
+      
+      <div class="standard-quote">
+        <strong>ציטוט מתוך התקן (IAS 8.5):</strong><br>
+        "Accounting policies are the specific principles, bases, conventions, rules and practices applied by an entity in preparing and presenting financial statements."
+      </div>
+
+      <p>לחץ על כל אחד מהצמתים בתרשים שלהלן כדי לראות אם הוא נחשב "מדיניות חשבונאית":</p>
+      <div class="brilliant-flow">
+        <div class="flow-node" onclick="showFlowInfo('מדידה של מלאי לפי FIFO לעומת ממוצע משוקלל. זוהי בחירה מובהקת במדיניות מדידה חשבונאית!')">מדידת ערך המלאי</div>
+        <div class="flow-arrow"></div>
+        <div class="flow-node" onclick="showFlowInfo('שיטה זו (למשל קו ישר) היא אומדן לדפוס צריכת ההטבות הכלכליות של הנכס, ולכן זה אומדן ולא מדיניות!')">שיטת פחת (קו ישר מול יתרת פוחתת)</div>
+        <div class="flow-arrow"></div>
+        <div class="flow-node" onclick="showFlowInfo('החלטה למדוד נדל\"ן להשקעה לפי שווי הוגן במקום עלות היסטורית היא שינוי מדיניות חשבונאית.')">מודל שווי הוגן לעומת עלות (IAS 40)</div>
+      </div>
+      <div id="flow-info-box" style="padding:12px; background:#ebf8ff; border:1px solid #3b82f6; border-radius:8px; margin-top:15px; display:none; text-align:center; font-weight:bold;"></div>
+    </div>
+  </div>
+
+  <!-- Slide 2: Selection & Changes of Policy -->
+  <div class="slide" id="slide-2">
+    <div class="card">
+      <div class="kicker">חלק 2</div>
+      <h2>בחירה ושינוי מדיניות</h2>
+      <p>כאשר יש תקן ספציפי (למשל IAS 2 למלאי), החברה <strong>חייבת</strong> לפעול על פיו. בהיעדר הנחיה ספציפית, על ההנהלה להפעיל שיקול דעת כדי לגבש מדיניות שתהיה <strong>רלוונטית ומהימנה</strong>.</p>
+      
+      <h3>משוכת ההצדקה לשינוי מדיניות:</h3>
+      <p>חברה רשאית לשנות מדיניות חשבונאית רק בשני מקרים:</p>
+      <ol style="margin-right:25px; margin-bottom:20px;">
+        <li>השינוי נדרש על פי תקן IFRS חדש.</li>
+        <li>השינוי יביא להצגת מידע מהימן ורלוונטי יותר (למשל מעבר לשיטה המקובלת בענף).</li>
+      </ol>
+
+      <div class="qa-box">
+        <p><strong>שאלה אינטראקטיבית:</strong> חברה החליטה לשנות את מדיניות הצגת הוצאות המימון בדוח רווח והפסד כדי להתאים לפרקטיקה המקובלת בקרב מתחרותיה בענף. האם זה מותר?</p>
+        <div class="options-container">
+          <button class="option-btn" onclick="checkAnswer(this, true, 'נכון מאוד! התאמה לפרקטיקה מקובלת לשיפור ההשוואתיות של הדוחות נחשבת להצדקה ראויה לפי התקן.', 1)">כן, השינוי מותר מכיוון שהוא משפר את כושר ההשוואה של המידע.</button>
+          <button class="option-btn" onclick="checkAnswer(this, false, 'לא נכון. מותר לשנות מדיניות אם השינוי הופך את המידע לרלוונטי ומהימן יותר, וכושר ההשוואה הוא חלק מרכזי בכך.', 1)">לא, אסור לשנות מדיניות מטעמי נוחות או השוואה בלבד.</button>
+        </div>
+        <div class="feedback-box" id="feedback-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Estimates -->
+  <div class="slide" id="slide-3">
+    <div class="card">
+      <div class="kicker">חלק 3</div>
+      <h2>אומדנים חשבונאיים (Estimates)</h2>
+      <p>חשבונאות מבוססת על הערכות של עתיד לא ודאי. לכן, <strong>שינוי באומדן</strong> מתרחש כתוצאה ממידע חדש או התפתחויות חדשות.</p>
+      <p><strong>כלל הטיפול:</strong> שינוי אומדן מטופל <strong>מכאן ולהבא (Prospective)</strong> - כלומר, נשפיע על התקופה הנוכחית ותקופות עתידיות בלבד. <strong>אין</strong> לשנות מספרי השוואה!</p>
+      
+      <div class="qa-box">
+        <p><strong>שאלה אינטראקטיבית:</strong> חברה רכשה מכונה והעריכה את אורך חייה השימושיים ב-10 שנים. לאחר 3 שנים, לאור שחיקה מהירה, הוחלט לעדכן את יתרת אורך החיים ל-4 שנים נוספות בלבד (סך הכל 7 שנים במקום 10). כיצד יש לטפל בשינוי זה?</p>
+        <div class="options-container">
+          <button class="option-btn" onclick="checkAnswer(this, false, 'לא נכון. שינוי אורך חיים שימושיים הוא שינוי אומדן, ואומדן מטופל מכאן ולהבא בלבד!', 2)">יש לתקן את הוצאות הפחת של שלוש השנים הקודמות למפרע.</button>
+          <button class="option-btn" onclick="checkAnswer(this, true, 'נכון! שינוי אורך חיים שימושיים הוא שינוי אומדן מובהק המטופל מכאן ולהבא.', 2)">יש לפרוס את יתרת הערך בספרים על פני 4 השנים שנותרו, ללא השפעה על העבר.</button>
+        </div>
+        <div class="feedback-box" id="feedback-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Errors -->
+  <div class="slide" id="slide-4">
+    <div class="card">
+      <div class="kicker">חלק 4</div>
+      <h2>תיקון טעויות למפרע (Retrospective Restatement)</h2>
+      <p>טעות מתרחשת כאשר יש אי-שימוש או שימוש לרעה במידע מהימן שהיה זמין בעת הכנת הדוחות. הטיפול בטעות הוא <strong>למפרע (Retrospective)</strong>: אנו מציגים את דוחות ההשוואה כאילו הטעות מעולם לא קרתה.</p>
+      
+      <div class="standard-quote">
+        <strong>כלל הזהב של IAS 8:</strong><br>
+        טעות מתקנים למפרע דרך התאמת עודפים/יתרת פתיחה של השנה המוקדמת ביותר המוצגת. שינוי אומדן מתקנים מכאן ולהבא ברווח והפסד.
+      </div>
+
+      <div class="qa-box">
+        <p><strong>שאלה אינטראקטיבית:</strong> בשנת 2021 גילתה החברה כי בדוחות 2020 הושמטה בטעות הוצאת פחת של 50,000 ש"ח בשל תקלה בתוכנת הנהלת החשבונות. כיצד יש לטפל בזה?</p>
+        <div class="options-container">
+          <button class="option-btn" onclick="checkAnswer(this, true, 'מדויק! זוהי שגיאה טכנית (טעות), ולכן יש לתקן אותה למפרע על ידי תיקון יתרת הפתיחה של העודפים ונתוני ההשוואה.', 3)">תיקון למפרע של דוחות 2020 (נתוני ההשוואה) והצגתם מחדש.</button>
+          <button class="option-btn" onclick="checkAnswer(this, false, 'לא נכון. השמטת פחת היא טעות מתמטית/מנהלתית, ולא שינוי אומדן. לא ניתן לתקן זאת מכאן ולהבא.', 3)">הכרה בהוצאה כפולה של פחת בשנת 2021 (מכאן ולהבא).</button>
+        </div>
+        <div class="feedback-box" id="feedback-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Complex Distinction -->
+  <div class="slide" id="slide-5">
+    <div class="card">
+      <div class="kicker">חלק 5</div>
+      <h2>הבחנה מורכבת: מדיניות מול אומדן</h2>
+      <p>לעתים קשה להבחין בין שינוי מדיניות לשינוי אומדן. התקן קובע כלל ברזל:</p>
+      <div class="standard-quote" style="border-right-color: var(--danger)">
+        <strong>IAS 8.35:</strong><br>
+        "When it is difficult to distinguish a change in an accounting policy from a change in an accounting estimate, the change is treated as a change in an accounting estimate."
+      </div>
+      <p>כלומר, במקרה של ספק - הנטייה היא לטפל כ<strong>שינוי אומדן (מכאן ולהבא)</strong> כדי למנוע מניפולציות ומורכבות מיותרת של שינויי עבר.</p>
+    </div>
+  </div>
+
+  <!-- Slide 6: Council Questions -->
+  <div class="slide" id="slide-6">
+    <div class="card">
+      <div class="kicker">סימולציה ברמת מועצה</div>
+      <h2>שאלות מועצת רואי חשבון בישראל</h2>
+      
+      <!-- CPA Question 1 -->
+      <div class="qa-box" style="margin-bottom:30px;">
+        <p><strong>שאלה 1:</strong> חברה הציגה בדוחותיה לשנת 2021 נדל"ן להשקעה לפי מודל העלות. בשנת 2022 החליט הדירקטוריון לעבור למודל שווי הוגן. יתרת העלות של הנדל"ן ליום 31.12.2021 הייתה 1,000,000 ש"ח, ושווי ההוגן למועד זה היה 1,500,000 ש"ח. כיצד יש לרשום את השינוי בדוחות לשנת 2022?</p>
+        <div class="options-container">
+          <button class="option-btn" onclick="checkAnswer(this, true, 'נכון! מעבר ממודל העלות למודל השווי ההוגן הוא שינוי מדיניות חשבונאית לפי IAS 40 / IAS 8. יש ליישם זאת למפרע ולתקן את יתרת הפתיחה של העודפים ליום 1.1.2022 ב-500,000 ש\"ח.', 4)">לשנות למפרע: להגדיל את שווי הנכס ב-500,000 ש"ח כנגד תיקון יתרת הפתיחה של העודפים ליום 1.1.2022.</button>
+          <button class="option-btn" onclick="checkAnswer(this, false, 'לא נכון. זהו שינוי מדיניות חשבונאית ולא אומדן, ולכן לא מטופל מכאן ולהבא ברווח והפסד.', 4)">להכיר ברווח מעליית ערך של 500,000 ש"ח בדוח רווח והפסד של שנת 2022 (מכאן ולהבא).</button>
+        </div>
+        <div class="feedback-box" id="feedback-4"></div>
+      </div>
+
+      <!-- CPA Question 2 -->
+      <div class="qa-box">
+        <p><strong>שאלה 2:</strong> חברה גילתה בשנת 2022 כי בשנת 2020 היא שילמה מראש שכירות לשלוש שנים בסך 300,000 ש"ח, ורשמה את כל הסכום כהוצאה בשנת 2020. שיעור המס הוא 23%. מהי ההשפעה של תיקון הטעות על יתרת העודפים לפתיחת שנת 2021?</p>
+        <div class="options-container">
+          <button class="option-btn" onclick="checkAnswer(this, false, 'לא נכון. הוצאות שכירות של 200,000 ש\"ח היו צריכות להיות מוכרות כהוצאות מראש (נכס). השפעת המס צריכה להילקח בחשבון.', 5)">יתרת העודפים ליום 1.1.2021 תקטן ב-200,000 ש"ח.</button>
+          <button class="option-btn" onclick="checkAnswer(this, true, 'מצוין! ההוצאה שנרשמה ביתר בשנת 2020 היא 200,000 ש\"ח (עבור השנים 2021 ו-2022). לאחר השפעת מס של 23% (46,000 ש\"ח), העודפים יגדלו נטו ב-154,000 ש\"ח.', 5)">יתרת העודפים ליום 1.1.2021 תגדל ב-154,000 ש"ח (200,000 ש"ח פחות 23% מס).</button>
+        </div>
+        <div class="feedback-box" id="feedback-5"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: Exam & Certificate -->
+  <div class="slide" id="slide-7">
+    <div class="card" id="exam-card">
+      <div class="kicker">בחינה מסכמת</div>
+      <h2>מבחן הסמכה - IAS 8</h2>
+      <p>ענה על שלוש השאלות הבאות. ציון של 60 ומעלה יזכה אותך בתעודת גמר רשמית בחתימת ד"ר שגיא צבן!</p>
+      
+      <div class="qa-box" style="margin-top:20px;">
+        <p><strong>שאלה 1:</strong> איזה מהבאים מהווה שינוי מדיניות חשבונאית?</p>
+        <div class="options-container">
+          <button class="option-btn" onclick="selectExamAnswer(0, 0, this)">מעבר משיטת FIFO לשיטת ממוצע משוקלל לצורך הערכת מלאי.</button>
+          <button class="option-btn" onclick="selectExamAnswer(0, 1, this)">שינוי אחוז החובות המסופקים מ-2% ל-5% מהמכירות.</button>
+          <button class="option-btn" onclick="selectExamAnswer(0, 2, this)">שינוי אורך החיים השימושיים של בניין מ-25 שנים ל-40 שנים.</button>
+        </div>
+      </div>
+
+      <div class="qa-box" style="margin-top:20px;">
+        <p><strong>שאלה 2:</strong> כיצד יש לטפל בשינוי שיטת פחת של מכונות לפי IAS 8?</p>
+        <div class="options-container">
+          <button class="option-btn" onclick="selectExamAnswer(1, 0, this)">כשינוי מדיניות חשבונאית - יישום למפרע.</button>
+          <button class="option-btn" onclick="selectExamAnswer(1, 1, this)">כשינוי אומדן חשבונאי - טיפול מכאן ולהבא בלבד.</button>
+          <button class="option-btn" onclick="selectExamAnswer(1, 2, this)">כתיקון טעות - הצגה מחדש של נתוני השוואה.</button>
+        </div>
+      </div>
+
+      <div class="qa-box" style="margin-top:20px;">
+        <p><strong>שאלה 3:</strong> אם יישום למפרע של שינוי מדיניות חשבונאית אינו מעשי (Impracticable) לגבי תקופות קודמות, הישות צריכה:</p>
+        <div class="options-container">
+          <button class="option-btn" onclick="selectExamAnswer(2, 0, this)">לא לבצע את השינוי בכלל ולהישאר עם המדיניות הישנה.</button>
+          <button class="option-btn" onclick="selectExamAnswer(2, 1, this)">ליישם את המדיניות החדשה ליתרות נכסים והתחייבויות לתחילת התקופה המוקדמת ביותר שלגביה היישום מעשי.</button>
+          <button class="option-btn" onclick="selectExamAnswer(2, 2, this)">לתקן רק את תקופת הדיווח הנוכחית ולתת גילוי בלבד.</button>
+        </div>
+      </div>
+
+      <button class="start-btn" style="margin-top:30px;" onclick="submitExam()">הגש מבחן</button>
+    </div>
+
+    <!-- Certificate Presentation -->
+    <div id="certificate-container">
+      <div class="cert-title">תעודת גמר חשבונאית</div>
+      <div class="cert-subtitle">מוענקת בזאת לסטודנט/ית המצטיין/ת</div>
+      <div class="cert-recipient" id="cert-name">ישראל ישראלי</div>
+      <div class="cert-text">
+        על השלמה בהצלחה של מודול הלמידה האינטראקטיבי המקיף בהיקף של 6 שעות לימוד בנושא:<br>
+        <strong>IAS 8 (מדיניות חשבונאית, שינויים באומדנים חשבונאיים וטעויות)</strong><br>
+        תוך עמידה במבחני הסמכה קפדניים ופתרון בעיות מורכבות ברמת מועצת רואי החשבון בישראל.
+      </div>
+      <div class="cert-text" style="font-weight: 700;">
+        ציון סופי: <span id="cert-grade">95</span>
+      </div>
+      <div class="cert-signatures">
+        <div class="signature-block">
+          <div class="signature-img">Dr. Shay Tzaban</div>
+          <div>ד"ר שגיא צבן</div>
+          <div style="font-size:0.8rem; color:#64748b;">מומחה לכלכלת האושר ותקינה בינלאומית</div>
+        </div>
+      </div>
+      <button class="print-btn" onclick="window.print()">הדפס/י תעודה או שמרי כ-PDF</button>
+    </div>
+  </div>
+
+  <!-- Nav Buttons -->
+  <div class="nav-controls" id="navigation-controls">
+    <button class="nav-btn prev" id="prev-btn" onclick="navigateSlide(-1)">הקודם</button>
+    <button class="nav-btn next" id="next-btn" onclick="navigateSlide(1)">הבא</button>
+  </div>
+</div>
+
+<script>
+let currentSlide = 0;
+const totalSlides = 8;
+let studentName = "";
+let studentEmail = "";
+let score = 0;
+let lifelines = 3;
+let hints = 3;
+
+// Dialogue advice for IAS 8
+const assistantAdvices = [
+  "זכרו! שינוי מדיניות מיושם למפרע, שינוי אומדן מיושם מכאן ולהבא!",
+  "אל תבלבלו בין שינוי שיטת פחת (אומדן) לשינוי מודל מדידה כמו עלות מול שווי הוגן (מדיניות)!",
+  "טעויות מתקנים רק למפרע דרך עודפים. אל תדחפו טעויות עבר לתוך דוח רווח והפסד הנוכחי!",
+  "במבחני מועצה אוהבים לתת אירועים שהם גם טעויות וגם אירועים לאחר תאריך הדיווח. קראו היטב מתי הטעות התגלתה!",
+  "אם קשה להבחין אם מדובר בשינוי מדיניות או אומדן - התקן קובע מפורשות: זהו שינוי אומדן!"
+];
+
+// Check localStorage
+window.onload = function() {
+  if (localStorage.getItem("studentName")) {
+    document.getElementById("onboarding").style.display = "none";
+    studentName = localStorage.getItem("studentName");
+    studentEmail = localStorage.getItem("studentEmail");
+  }
+  updateStatsUI();
+  makeDraggable(document.getElementById("dr-assistant"));
+};
+
+function startCourse() {
+  const nameInput = document.getElementById("student-name").value.trim();
+  const emailInput = document.getElementById("student-email").value.trim();
+  if (nameInput === "" || emailInput === "") {
+    alert("אנא מלאו שם מלא ואימייל כדי להתחיל.");
+    return;
+  }
+  studentName = nameInput;
+  studentEmail = emailInput;
+  localStorage.setItem("studentName", studentName);
+  localStorage.setItem("studentEmail", studentEmail);
+  document.getElementById("onboarding").style.display = "none";
+  showDialogue("ברוך הבא למסלול המכשולים של IAS 8! שיהיה בהצלחה.");
+}
+
+function updateStatsUI() {
+  document.getElementById("lifelines-display").innerText = "❤️".repeat(lifelines) || "אין חיים";
+  document.getElementById("hints-display").innerText = hints;
+}
+
+function useHint() {
+  if (hints <= 0) {
+    showDialogue("אזלו הרמזים! עליך לענות בעצמך או לעבור את המשחק.");
+    return;
+  }
+  hints--;
+  updateStatsUI();
+  const randomAdvice = assistantAdvices[Math.floor(Math.random() * assistantAdvices.length)];
+  showDialogue("רמז: " + randomAdvice);
+}
+
+function showDialogue(text) {
+  const box = document.getElementById("assistant-dialogue");
+  document.getElementById("dialogue-text").innerText = text;
+  box.style.display = "block";
+}
+
+function closeDialogue() {
+  document.getElementById("assistant-dialogue").style.display = "none";
+}
+
+// Draggable assistant logic
+function makeDraggable(elmnt) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  elmnt.onmousedown = dragMouseDown;
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos3 = e.clientX;
+    // Allow dragging only horizontally (side to side) as requested
+    let newLeft = elmnt.offsetLeft - pos1;
+    if (newLeft > 10 && newLeft < window.innerWidth - 100) {
+      elmnt.style.left = newLeft + "px";
+    }
+  }
+
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+    // Click action if didn't drag far
+    showDialogue(assistantAdvices[Math.floor(Math.random() * assistantAdvices.length)]);
+  }
+}
+
+function dragStart(e) {
+  // handled in makeDraggable
+}
+
+// Nav Slides
+function navigateSlide(direction) {
+  let next = currentSlide + direction;
+  if (next >= 0 && next < totalSlides) {
+    jumpToSlide(next);
+  }
+}
+
+function jumpToSlide(slideNum) {
+  document.getElementById(`slide-${currentSlide}`).classList.remove("active");
+  currentSlide = parseInt(slideNum);
+  document.getElementById(`slide-${currentSlide}`).classList.add("active");
+  document.getElementById("nav-dropdown").value = currentSlide;
+
+  // Toggle prev/next buttons
+  document.getElementById("prev-btn").style.visibility = currentSlide === 0 ? "hidden" : "visible";
+  document.getElementById("next-btn").style.visibility = currentSlide === totalSlides - 1 ? "hidden" : "visible";
+}
+
+function showFlowInfo(text) {
+  const box = document.getElementById("flow-info-box");
+  box.innerText = text;
+  box.style.display = "block";
+}
+
+// Q&A logic
+function checkAnswer(btn, isCorrect, explanation, questionId) {
+  const feedback = document.getElementById(`feedback-${questionId}`);
+  const parent = btn.parentElement;
+  const buttons = parent.querySelectorAll('.option-btn');
+  
+  buttons.forEach(b => {
+    b.disabled = true;
+    if (b === btn) {
+      b.classList.add(isCorrect ? 'correct' : 'wrong');
+    }
+  });
+
+  if (isCorrect) {
+    feedback.innerText = explanation;
+    feedback.className = "feedback-box correct";
+    score += 15;
+  } else {
+    feedback.innerText = "טעות! " + explanation;
+    feedback.className = "feedback-box wrong";
+    lifelines--;
+    updateStatsUI();
+    if (lifelines <= 0) {
+      triggerFallbackGame();
+    }
+  }
+}
+
+// Exam score tracker
+let examAnswers = {};
+function selectExamAnswer(questionIdx, optionIdx, btn) {
+  examAnswers[questionIdx] = optionIdx;
+  const buttons = btn.parentElement.querySelectorAll('.option-btn');
+  buttons.forEach(b => b.style.borderColor = 'var(--border-color)');
+  btn.style.borderColor = 'var(--brilliant-blue)';
+}
+
+function submitExam() {
+  if (Object.keys(examAnswers).length < 3) {
+    alert("נא לענות על כל השאלות לפני ההגשה!");
+    return;
+  }
+
+  let correctCount = 0;
+  if (examAnswers[0] === 0) correctCount++;
+  if (examAnswers[1] === 1) correctCount++;
+  if (examAnswers[2] === 1) correctCount++;
+
+  let finalGrade = Math.round((correctCount / 3) * 100);
+  
+  document.getElementById("exam-card").style.display = "none";
+  document.getElementById("navigation-controls").style.display = "none";
+  
+  if (finalGrade >= 60) {
+    document.getElementById("cert-name").innerText = studentName;
+    document.getElementById("cert-grade").innerText = finalGrade + "%";
+    document.getElementById("certificate-container").style.display = "block";
+  } else {
+    alert(`ציונך הוא ${finalGrade}. לא עברת את רף ה-60 הנדרש לקבלת תעודה. תוכל לאפס את המודול ולנסות שוב.`);
+  }
+}
+
+function resetCourse() {
+  localStorage.clear();
+  location.reload();
+}
+
+// Mini Game Pac-Man style
+let canvas, ctx;
+let gameInterval;
+let gameActive = false;
+let player = { x: 50, y: 50, size: 20, speed: 4 };
+let ghosts = [];
+let coins = [];
+let gameScore = 0;
+
+function triggerFallbackGame() {
+  document.getElementById("game-overlay").style.display = "flex";
+  canvas = document.getElementById("game-canvas");
+  ctx = canvas.getContext("2d");
+  initGame();
+  gameActive = true;
+  document.addEventListener("keydown", movePlayer);
+  gameInterval = setInterval(gameLoop, 1000/30);
+}
+
+function initGame() {
+  player.x = 50;
+  player.y = 50;
+  gameScore = 0;
+  
+  // Set up 3 ghosts
+  ghosts = [
+    { x: 300, y: 100, speedX: 2, speedY: 1, text: "תלמד חשבונאות" },
+    { x: 400, y: 250, speedX: -1.5, speedY: 2, text: "יא כלב!" },
+    { x: 200, y: 300, speedX: 2.5, speedY: -1.5, text: "IAS 8 בדם" }
+  ];
+
+  // Set up coins
+  coins = [];
+  for (let i = 0; i < 15; i++) {
+    coins.push({
+      x: Math.random() * (canvas.width - 40) + 20,
+      y: Math.random() * (canvas.height - 40) + 20,
+      radius: 8,
+      active: true
+    });
+  }
+}
+
+function movePlayer(e) {
+  if (!gameActive) return;
+  if (e.key === "ArrowUp" || e.key === "Up") player.y = Math.max(0, player.y - player.speed);
+  if (e.key === "ArrowDown" || e.key === "Down") player.y = Math.min(canvas.height - player.size, player.y + player.speed);
+  if (e.key === "ArrowLeft" || e.key === "Left") player.x = Math.max(0, player.x - player.speed);
+  if (e.key === "ArrowRight" || e.key === "Right") player.x = Math.min(canvas.width - player.size, player.x + player.speed);
+}
+
+function gameLoop() {
+  // Clear
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw Coins
+  ctx.fillStyle = "var(--accent)";
+  coins.forEach(c => {
+    if (c.active) {
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+
+  // Draw Player (as a book/square with "IAS 8" text)
+  ctx.fillStyle = "var(--brilliant-blue)";
+  ctx.fillRect(player.x, player.y, player.size, player.size);
+  ctx.fillStyle = "#fff";
+  ctx.font = "8px sans-serif";
+  ctx.fillText("IAS8", player.x + 2, player.y + 12);
+
+  // Update & Draw Ghosts
+  ghosts.forEach(g => {
+    g.x += g.speedX;
+    g.y += g.speedY;
+
+    // Bounce walls
+    if (g.x < 0 || g.x > canvas.width - player.size) g.speedX *= -1;
+    if (g.y < 0 || g.y > canvas.height - player.size) g.speedY *= -1;
+
+    // Draw ghost body (red rectangle)
+    ctx.fillStyle = "var(--danger)";
+    ctx.fillRect(g.x, g.y, 20, 20);
+    
+    // Ghost text bubble
+    ctx.fillStyle = "#fff";
+    ctx.font = "10px Heebo";
+    ctx.fillText(g.text, g.x - 20, g.y - 5);
+
+    // Collision Check with player
+    if (
+      player.x < g.x + 20 &&
+      player.x + player.size > g.x &&
+      player.y < g.y + 20 &&
+      player.y + player.size > g.y
+    ) {
+      // Hit! Restart game
+      alert("נפסלת ע\"י ד\"ר צבן! נסה שוב.");
+      initGame();
+    }
+  });
+
+  // Check coin collisions
+  coins.forEach(c => {
+    if (c.active) {
+      let dist = Math.hypot(player.x + player.size/2 - c.x, player.y + player.size/2 - c.y);
+      if (dist < c.radius + player.size/2) {
+        c.active = false;
+        gameScore++;
+      }
+    }
+  });
+
+  // Check Win Condition
+  if (gameScore >= coins.length) {
+    clearInterval(gameInterval);
+    gameActive = false;
+    document.getElementById("game-overlay").style.display = "none";
+    lifelines = 3;
+    hints = 3;
+    updateStatsUI();
+    alert("כל הכבוד! ניצחת את ד\"ר צבן וקיבלת את המשאבים שלך בחזרה. המשך ללמוד!");
+  }
+}
+</script>
+</body>
+</html>
